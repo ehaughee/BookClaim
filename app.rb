@@ -77,19 +77,18 @@ post '/claims/?' do
   })
 
   logger.info claim ? "Added claim: #{claim.inspect}" : "Failed adding claim with params: #{params.inspect}"
-
+$('#bid_modal .modal-time').text result
   #TODO handle success/failure
 end
 
 get '/search/?' do
-  # TODO: This shouldn't redirect to admin, it should return JSON parsed on the client side
   redirect '/admin' unless defined? params[:q]
 
   @query  = params[:q]
   @result = book_query(@query)
   @books  = JSON.parse(@result)["items"]
 
-  # TODO: This shouldn't load admin by default, it should be general
+  # TODO: This shouldn't load admin, it should be general
   @route = { method: "POST", action: "/books" }
   respond_to do |f|
     f.html { haml :admin }
