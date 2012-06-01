@@ -77,8 +77,6 @@ post '/claims/?' do
   })
 
   logger.info claim ? "Added claim: #{claim.inspect}" : "Failed adding claim with params: #{params.inspect}"
-$('#bid_modal .modal-time').text result
-  #TODO handle success/failure
 end
 
 get '/search/?' do
