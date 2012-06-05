@@ -35,7 +35,7 @@ helpers do
   end
 
   def book_query(query)
-    Curl::Easy.perform("https://www.googleapis.com/books/v1/volumes?q=#{URI.encode query}&key=#{settings.apikey}").body_str
+    Curl::Easy.perform("https://www.googleapis.com/books/v1/volumes?q=#{URI.encode query}&maxResults=40&key=#{settings.apikey}").body_str
   end
 end
 
@@ -80,7 +80,7 @@ post '/claims/?' do
 end
 
 get '/search/?' do
-  redirect '/admin' unless defined? params[:q]
+  redirect "/#{request.env['HTTP_REFERRER'].split('/').last}" unless defined? params[:q]
 
   @query  = params[:q]
   @result = book_query(@query)

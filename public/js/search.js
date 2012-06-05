@@ -33,13 +33,14 @@ $(document).ready(function() {
         $.getJSON('/search',
             { q: query },
             function(data) {
-//                console.log(data.items);
 
                 var template = Handlebars.compile($("#booklist-template").html());
                 Handlebars.registerPartial("book", $("#book-partial").html());
 
-                if ($("#searchResults"))
-                    $("#searchResults").empty();
+                var list = $("#searchResults ul.thumbnails");
+                if (list.length > 0)
+                    list.remove();
+
                 $("#searchResults").append(template(data));
 
                 $("#btnSearch").button('reset');

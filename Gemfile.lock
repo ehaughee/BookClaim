@@ -105,6 +105,7 @@ PLATFORMS
 
 DEPENDENCIES
   curb
+  daemons
   data_mapper
   dm-postgres-adapter
   dm-sqlite-adapter

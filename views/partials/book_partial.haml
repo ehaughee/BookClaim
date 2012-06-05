@@ -1,9 +1,9 @@
 %script#book-partial(type="text/x-handlebars-template")
     {{#with volumeInfo}}
     %li.span2
-        {{#if imageLinks }}
         .thumbnail
             %form{action: "/books", :method => "post"}
+                {{#if imageLinks }}
                 %img(src="{{imageLinks.thumbnail}}" alt="{{title}}")
                 %input(type="hidden" name="thumbnail" value="{{imageLinks.thumbnail}}")
                 {{/if}}

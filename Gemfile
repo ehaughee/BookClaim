@@ -6,6 +6,7 @@ gem "haml"
 gem "curb"
 gem "data_mapper"
 gem 'thin'
+gem 'daemons'
 
 group :development do
   gem "dm-sqlite-adapter"
