@@ -1,41 +1,32 @@
-%script(id="book-partial" type="text/x-handlebars-template")
-  <ul class="thumbnails">
-  %ul.thumbnails
-    %li.span2
-      .thumbnail
-        - if {{volumeInfo.imageLinks}}
-          %img{ src: {{volumeInfo.imageLinks.thumbnail}}, alt: book["volumeInfo"]["title"] }
-          %input(type="hidden" name="thumbnail"){ value: book["volumeInfo"]["imageLinks"]["thumbnail"] }
-        %h4.title
-          = book["volumeInfo"]["title"]
-          %input(type="hidden" name="title"){ value: book["volumeInfo"]["title"] }
+%script#book-partial(type="text/x-handlebars-template")
+  {{#with volumeInfo}}
+  %li.span2
+    .thumbnail
+      %form{action: "/books", :method => "post"}
+        {{#if imageLinks }}
+        %img(src="{{imageLinks.thumbnail}}" alt="{{title}}")
+        %input(type="hidden" name="thumbnail" value="{{imageLinks.thumbnail}}")
+        {{/if}}
+
+        %h4.title {{title}}
+        %input(type="hidden" name="title" value="{{title}}")
+
+        {{#if authors}}
         .authors
-          -if book["volumeInfo"]["authors"]
-            = book["volumeInfo"]["authors"].join(", ")
-        %input(type="hidden" name="authors"){ value: book["volumeInfo"]["authors"].join(',') }
+          {{join authors}}
+          %input(type="hidden" name="authors" value="{{join authors}}")
+          {{/if}}
+
         %button.btn.btn-primary(type="submit")
-          - if search
-            %i.icon-plus.icon-white
-            Add
-          - elsif authorized?
-            %i.icon-remove.icon-white
-            Delete
-          - else
-            %i.icon-ok.icon-white
-            Claim
+          %i.icon-plus.icon-white
+          Add
+    {{/with}}
 
-%script(id="booklist-template" type="text/x-handlebars-template")
-  {{#if books}}
-    {{#each books}}
-      {{> book}}
-    {{/each}}
-  {{/if}}
-
-%script(type="text/javascript")
-  $(document).ready(function() {
-    var template = Handlebars.compile($("#booklist-template").html());
-    Handlebars.registerPartial("book", $("#book-partial").html());
-
-    var books = blah;
-    template(books)
-  });
+%script#booklist-template(type="text/x-handlebars-template")
+  %ul.thumbnails
+    :plain
+      {{#if items}}
+          {{#items}}
+              {{> book}}
+          {{/items}}
+      {{/if}}

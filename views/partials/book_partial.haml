@@ -1,32 +1,17 @@
-%script#book-partial(type="text/x-handlebars-template")
-    {{#with volumeInfo}}
-    %li.span2
-        .thumbnail
-            %form{action: "/books", :method => "post"}
-                {{#if imageLinks }}
-                %img(src="{{imageLinks.thumbnail}}" alt="{{title}}")
-                %input(type="hidden" name="thumbnail" value="{{imageLinks.thumbnail}}")
-                {{/if}}
+.thumbnail
+  %form{ action: route['action'], method: route['method'] }
+    - unless book.thumbnail.nil?
+      %img{ src: book.thumbnail, alt: book.title }
+      %input(type="hidden" name="thumbnail"){ value: book.thumbnail }
 
-                %h4.title {{title}}
-                %input(type="hidden" name="title" value="{{volumeInfo.title}}")
+      %h4.title= book.title
+      %input(type="hidden" name="title"){ value: book.title }
 
-                {{#if authors}}
-                .authors
-                    {{join authors}}
-                    %input(type="hidden" name="authors" value="{{join authors}}")
-                    {{/if}}
+    - unless book.authors.nil?
+      .authors
+        = book.authors
+        %input(type="hidden" name="authors"){ value: book.authors }
 
-                %button.btn.btn-primary(type="submit")
-                    %i.icon-plus.icon-white
-                    Add
-    {{/with}}
-
-%script#booklist-template(type="text/x-handlebars-template")
-    %ul(class="thumbnails")
-        :plain
-            {{#if items}}
-                {{#items}}
-                    {{> book}}
-                {{/items}}
-            {{/if}}
+    %button.btn.btn-primary(type="submit")
+      %i.icon-plus.icon-white
+      Add

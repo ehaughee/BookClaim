@@ -14,7 +14,6 @@ enable :sessions
 respond_to :html, :json
 config_file 'config.yml'
 
-
 #look at pulling helpers into own file
 helpers do
   def protected!
@@ -51,17 +50,22 @@ end
 
 get '/books/?' do
   @route = { method: "POST", action: "/claims"}
+  @books = Book.all
   haml :books
 end
 
 post '/books/?'  do
-  book = Book.create({
-    title:       params["title"],
-    authors:     params["authors"],
-    thumbnail:   params["thumbnail"]
-  })
+  book = Book.new(
+    title:       params["title"] || "",
+    authors:     params["authors"] || "",
+    thumbnail:   params["thumbnail"] || ""
+  )
+
+  book.save!
 
   #TODO handle success/failure
+  logger.info book ? "Added book: #{book.inspect}" : "Failed adding claim with params: #{params.inspect}"
+  redirect '/books'
 end
 
 delete '/books/:id/?' do
@@ -70,26 +74,27 @@ delete '/books/:id/?' do
 end
 
 post '/claims/?' do
-  claim = Claim.create({ # TODO: make this first_or_create and use PUT
+  claim = Claim.new({ # TODO: make this first_or_create and use PUT
       book_id: params[:book_id],
       name:    params[:name],
       note:    params[:note]
   })
 
+  #TODO handle success/failure
   logger.info claim ? "Added claim: #{claim.inspect}" : "Failed adding claim with params: #{params.inspect}"
 end
 
 get '/search/?' do
-  redirect "/#{request.env['HTTP_REFERRER'].split('/').last}" unless defined? params[:q]
+  from = request.env['HTTP_REFERER'].split('/').last
+  redirect "/#{from}" unless defined? params[:q]
 
   @query  = params[:q]
   @result = book_query(@query)
   @books  = JSON.parse(@result)["items"]
 
-  # TODO: This shouldn't load admin, it should be general
   @route = { method: "POST", action: "/books" }
   respond_to do |f|
-    f.html { haml :admin }
+    f.html { haml from.to_sym }
     f.json { params[:q].nil? ? json({totalItems: 0}) : @result }
   end
 end

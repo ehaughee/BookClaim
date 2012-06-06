@@ -1,9 +1,9 @@
 %h2 Books
-%p
-  - if defined? books
-    %h3 Search Results
-    %br
-    .well
-      = partial(:'partials/book_partial', locals: { books: @books, route: @route })
+.well
+  - unless @books.nil? or @books.count < 1
+    %ul.thumbnails
+      - @books.each do |book|
+        %li.span2
+          = partial(:'partials/book_partial', locals: { book: book, route: @route })
   - else
     No books yet

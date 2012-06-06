@@ -1,7 +1,7 @@
 require 'data_mapper'
 
 DataMapper::Logger.new($stdout, :debug)
-DataMapper.setup(:default, ENV["DATABASE_URL"] || "sqlite3::memory:")
+DataMapper.setup(:default, ENV["DATABASE_URL"] || "sqlite3://#{Dir.pwd}/bookclaim.db" || "sqlite3::memory:")
 
 class Book
   include DataMapper::Resource
@@ -34,4 +34,4 @@ class Claim
   belongs_to :book
 end
 
-DataMapper.finalize.auto_upgrade!
+DataMapper.finalize.auto_migrate!
