@@ -11,6 +11,13 @@
     #dashboard.tab-pane.active
       Dashboard stuff here
     #manage_books.tab-pane
-      No books
+      .well
+        - unless @books.nil? or @books.count < 1
+          %ul.thumbnails
+            - @books.each do |book|
+              %li.span2
+                = partial(:'partials/book_partial', locals: { book: book, route: @route })
+        - else
+          No books yet
     #add_a_book.tab-pane
-      = partial(:'partials/book_search_partial', locals: { books: @books, query: @query, route: @route })
+      = partial(:'partials/book_search_partial', locals: { books: @search_results, query: @query, route: @route })

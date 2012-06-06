@@ -45,6 +45,7 @@ end
 get '/admin/?' do
   protected!
   @route = { method: "DELETE", action: "/books"}
+  @books = Book.all
   haml :admin
 end
 
@@ -58,43 +59,46 @@ post '/books/?'  do
   book = Book.new(
     title:       params["title"] || "",
     authors:     params["authors"] || "",
-    thumbnail:   params["thumbnail"] || ""
+    thumbnail:   params["thumbnail"].gsub("&edge=curl", "") || ""
   )
 
   book.save!
 
-  #TODO handle success/failure
+  # TODO handle success/failure
   logger.info book ? "Added book: #{book.inspect}" : "Failed adding claim with params: #{params.inspect}"
-  redirect '/books'
+  redirect back
 end
 
 delete '/books/:id/?' do
   protected!
   Book.get(params[:id]).destroy
+  logger.info "Deleted book with id: #{params[:id]}"
 end
 
 post '/claims/?' do
-  claim = Claim.new({ # TODO: make this first_or_create and use PUT
-      book_id: params[:book_id],
-      name:    params[:name],
-      note:    params[:note]
-  })
+  claim = Claim.new(
+      book_id: params[:book_id] || "",
+      name:    params[:name] || "",
+      note:    params[:note] || ""
+  )
+
+  claim.save!
 
   #TODO handle success/failure
   logger.info claim ? "Added claim: #{claim.inspect}" : "Failed adding claim with params: #{params.inspect}"
+  redirect back
 end
 
 get '/search/?' do
-  from = request.env['HTTP_REFERER'].split('/').last
-  redirect "/#{from}" unless defined? params[:q]
+  redirect back unless defined? params[:q]
 
   @query  = params[:q]
   @result = book_query(@query)
-  @books  = JSON.parse(@result)["items"]
+  @search_results  = JSON.parse(@result)["items"]
 
   @route = { method: "POST", action: "/books" }
   respond_to do |f|
-    f.html { haml from.to_sym }
+    f.html { haml back.to_sym }
     f.json { params[:q].nil? ? json({totalItems: 0}) : @result }
   end
 end

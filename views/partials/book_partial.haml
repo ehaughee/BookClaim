@@ -1,17 +1,44 @@
+%script(type="text/javascript" src="js/book.js")
 .thumbnail
-  %form{ action: route['action'], method: route['method'] }
+  %form{ action: route[:action], method: route[:method] }
     - unless book.thumbnail.nil?
       %img{ src: book.thumbnail, alt: book.title }
-      %input(type="hidden" name="thumbnail"){ value: book.thumbnail }
 
       %h4.title= book.title
-      %input(type="hidden" name="title"){ value: book.title }
 
     - unless book.authors.nil?
       .authors
         = book.authors
-        %input(type="hidden" name="authors"){ value: book.authors }
 
-    %button.btn.btn-primary(type="submit")
-      %i.icon-plus.icon-white
-      Add
+    - if route[:action] == '/claims'
+      %button.book_submit.btn.btn-primary(type="submit" data-book-id="#{book.id}")
+        %i.icon-download-alt.icon-white
+        Claim
+
+    - elsif route[:action] == '/books' and route[:method] == 'DELETE'
+      %button.book_submit.btn.btn-danger(type="submit" data-book-id="#{book.id}")
+        %i.icon-minus.icon-white
+        Remove
+
+    - if route[:action] == '/claims'
+      -# Modal
+      .modal.hide(style="display: none;"){ id: 'modal' + book.id.to_s }
+        .modal-header
+          %button.close(data-dismiss="modal")= '×'
+          %h3 Claim this book
+        .modal-body
+          - unless book.thumbnail.nil?
+            .cover
+              %img{ src: book.thumbnail, alt: book.title }
+          %form.modal-form(action="/claims" method='POST')
+            %input(type="hidden" name="book_id"){ value: book.id }
+            %label(for="modal_name") Name
+            %input#modal_name(type="text" name="name")
+
+            %label(for="modal_note") Notes
+            %textarea#modal_note(type="text" name="note")
+        .modal-footer
+          %a.btn(data-dismiss="modal") Cancel
+          %a.btn.btn-success(href="#") Claim
+    - elsif route[:action] == '/books' and route[:method] == 'DELETE'
+      %input(type="hidden" name="book_id"){ value: book.id }

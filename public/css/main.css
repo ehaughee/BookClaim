@@ -41,8 +41,15 @@ body {
     /*margin-bottom: 5px;*/
 /*}*/
 
-.thumbnail .btn {
+.thumbnail .book_submit.btn {
     position: absolute;
     bottom: 5px;
     width: 140px;
+}
+
+.cover {
+    float: left;
+    padding-right: 10px;
+    border-right: 1px solid grey;
+    margin-right: 10px;
 }
