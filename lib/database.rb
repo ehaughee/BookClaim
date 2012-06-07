@@ -11,7 +11,7 @@ class Book
   property :authors,      String
   property :thumbnail,    String
 
-  has n, :claim
+  has n, :claims
 end
 
 class User

@@ -46,6 +46,7 @@ get '/admin/?' do
   protected!
   @route = { method: "DELETE", action: "/books"}
   @books = Book.all
+  @claims = Claim.all
   haml :admin
 end
 
