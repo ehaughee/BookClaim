@@ -1,7 +1,7 @@
 require 'data_mapper'
 
 DataMapper::Logger.new($stdout, :debug)
-DataMapper.setup(:default, ENV["DATABASE_URL"] || "sqlite3://#{Dir.pwd}/bookclaim.db" || "sqlite3::memory:")
+DataMapper.setup(:default, ENV["DATABASE_URL"] || "sqlite3://#{Dir.pwd}/bookclaim.db")
 
 class Book
   include DataMapper::Resource
@@ -9,7 +9,7 @@ class Book
   property :id,           Serial
   property :title,        String
   property :authors,      String
-  property :thumbnail,    String
+  property :thumbnail,    Text
 
   has n, :claims
 end

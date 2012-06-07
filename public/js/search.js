@@ -41,7 +41,13 @@ $(document).ready(function() {
                 if (list.length > 0)
                     list.remove();
 
-                $("#searchResults").append(template(data));
+                if (data.error) {
+                    console.log(data);
+                    $("#searchResults").append("<div class='ul thumbnails'>Error</div>");
+                }
+                else {
+                    $("#searchResults").append(template(data));
+                }
 
                 $("#btnSearch").button('reset');
             }
