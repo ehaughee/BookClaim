@@ -57,6 +57,7 @@ get '/books/?' do
 end
 
 post '/books/?'  do
+  logger.info "Received post #{params.inspect}"
   book = Book.new(
     title:       params["title"] || "",
     authors:     params["authors"] || "",
@@ -77,6 +78,7 @@ delete '/books/:id/?' do
 end
 
 post '/claims/?' do
+  logger.info "Received post #{params.inspect}"
   claim = Claim.new(
       book_id: params[:book_id] || "",
       name:    params[:name] || "",
