@@ -7,8 +7,9 @@ $(document).ready(function() {
 
     $(".book_submit").click(function() {
         var id = this.dataset.bookId;
-        $("#modal" + id).modal('show');
-
-        return false;
+        if (id) {
+            $("#modal" + id).modal('show');
+            return false;
+        }
     });
 });

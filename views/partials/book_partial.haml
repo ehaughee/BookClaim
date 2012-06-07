@@ -34,8 +34,7 @@
           %a.btn(data-dismiss="modal") Cancel
           %input.btn.btn-success(type="submit" value="Claim")
   - elsif route[:action] == '/books' and route[:method] == 'DELETE'
-    %form{ action: route[:action], method: route[:method] }
-      %input(type="hidden" name="book_id"){ value: book.id }
-      %button.book_submit.btn.btn-danger(type="submit" data-book-id="#{book.id}")
+    %form{ action: "/books/#{book.id}", method: "DELETE" }
+      %button.book_submit.btn.btn-danger(type="submit")
         %i.icon-minus.icon-white
         Remove

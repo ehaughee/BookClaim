@@ -57,7 +57,7 @@ get '/books/?' do
 end
 
 post '/books/?'  do
-  logger.info "Received post #{params.inspect}"
+  logger.info "Received POST #{params.inspect}"
   book = Book.new(
     title:       params["title"] || "",
     authors:     params["authors"] || "",
@@ -71,14 +71,18 @@ post '/books/?'  do
   redirect back
 end
 
-delete '/books/:id/?' do
+get '/books/:id/?' do
   protected!
+  redirect back unless request.env["REQUEST_METHOD"] == 'DELETE'
+  logger.info "Received DELETE: #{params[:id]}"
+
   Book.get(params[:id]).destroy
   logger.info "Deleted book with id: #{params[:id]}"
+  redirect back
 end
 
 post '/claims/?' do
-  logger.info "Received post #{params.inspect}"
+  logger.info "Received POST #{params.inspect}"
   claim = Claim.new(
       book_id: params[:book_id] || "",
       name:    params[:name] || "",
